@@ -33,9 +33,9 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+var focusedElementBeforeModal;
 
 var accessible_modal = function(trigger, closeButtonId, modalId, mainPageId) {
-  var focusedElementBeforeModal;
 
   // Modifies a lean modal to optimize focus management.
   // "trigger" is the selector for the link element that triggers the modal.
