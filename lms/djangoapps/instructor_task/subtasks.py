@@ -165,10 +165,16 @@ def _acquire_subtask_lock(task_id):
     loss of connection to the task broker.  Most of the time, such duplicate tasks are
     run sequentially, but they can overlap in processing as well.
 
-    Returns true if the task_id is not locked; false if it is.
+    Returns true if the task_id was not already locked; false if it was.
     """
     # cache.add fails if the key already exists
-    return cache.add(task_id, 'true', SUBTASK_LOCK_EXPIRE)
+    key = "subtask-{}".format(task_id)
+    succeeded = cache.add(key, 'true', SUBTASK_LOCK_EXPIRE)
+    if not succeeded:
+        value_of_key = cache.get(key)
+        format_str = "task_id '{}': already locked.  Contains value '{}'"
+        msg = format_str.format(task_id, value_of_key)
+        TASK_LOG.warning(msg)
 
 
 def _release_subtask_lock(task_id):
@@ -179,7 +185,8 @@ def _release_subtask_lock(task_id):
     """
     # According to Celery task cookbook, "Memcache delete is very slow, but we have
     # to use it to take advantage of using add() for atomic locking."
-    cache.delete(task_id)
+    key = "subtask-{}".format(task_id)
+    cache.delete(key)
 
 
 def check_subtask_is_valid(entry_id, current_task_id):
