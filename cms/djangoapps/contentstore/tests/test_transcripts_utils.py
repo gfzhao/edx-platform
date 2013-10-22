@@ -298,7 +298,7 @@ class TestGenerateSubsFromSource(TestDownloadYoutubeSubs):
         """)
 
         with self.assertRaises(transcripts_utils.TranscriptsGenerationException) as cm:
-                transcripts_utils.generate_subs_from_source(youtube_subs, 'BAD_FORMAT', srt_filedata, self.course)
+            transcripts_utils.generate_subs_from_source(youtube_subs, 'BAD_FORMAT', srt_filedata, self.course)
         exception_message = cm.exception.message
         self.assertEqual(exception_message, "We support only SubRip (*.srt) transcripts format.")
 
