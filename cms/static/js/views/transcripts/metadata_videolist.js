@@ -182,29 +182,33 @@ function($, Backbone, _, Utils, MessageManager, MetadataView) {
         */
         getPlaceholders: function (value) {
             var parseLink = Utils.parseLink,
-                placeholders = _.clone(this.placeholders),
-                result = [],
-                linkInfo, label, type;
+                placeholders = _.clone(this.placeholders);
 
-            for (var i = 0; i < 3; i += 1) {
-                linkInfo = parseLink(value[i]);
-                type = (linkInfo) ? linkInfo.type : null;
+            // Returned list should have the same size as a count of editors/views.
+            return _.map(
+                this.$el.find('.input'),
+                function (element, index) {
+                    var linkInfo = parseLink(value[index]),
+                        type = (linkInfo) ? linkInfo.type : null,
+                        label;
 
-                // If placeholder for current video type exist, retrieve it and
-                // remove from cloned list.
-                // Otherwise, we use the remaining placeholders.
-                if (placeholders[type]) {
-                    label = placeholders[type];
-                    delete placeholders[type];
-                } else {
-                    placeholders = _.values(placeholders);
-                    label = placeholders.pop();
+                    // If placeholder for current video type exist, retrieve it
+                    // and remove from cloned list.
+                    // Otherwise, we use the remaining placeholders.
+                    if (placeholders[type]) {
+                        label = placeholders[type];
+                        delete placeholders[type];
+                    } else {
+                        if ( !($.isArray(placeholders)) ) {
+                            placeholders = _.values(placeholders);
+                        }
+
+                        label = placeholders.pop();
+                    }
+
+                    return label;
                 }
-
-                result.push(label);
-            }
-
-            return result;
+            );
         },
 
         /**
