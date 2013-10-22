@@ -339,6 +339,7 @@ def transcripts_logic(transcripts_presence, videos):
             transcripts_presence['youtube_local'] and
             transcripts_presence['youtube_server']):  # youtube server and local exist
         command = 'replace'
+        subs = videos['youtube']
     elif transcripts_presence['youtube_local']:  # only youtube local exist
         command = 'found'
         subs = videos['youtube']
@@ -351,6 +352,7 @@ def transcripts_logic(transcripts_presence, videos):
                 subs = transcripts_presence['html5_local'][0]
             else:
                 command = 'choose'
+                subs = transcripts_presence['html5_local'][0]
         else:  # html5 source have no subtitles
             # check if item sub has subtitles
             if transcripts_presence['current_item_subs'] and not transcripts_presence['is_youtube_mode']:

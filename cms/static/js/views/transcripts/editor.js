@@ -86,15 +86,27 @@ function($, Backbone, _, Utils, MetadataView, MetadataCollection) {
             videoUrl = getField(this.collection, 'video_url');
 
             modifiedValues = metadataView.getModifiedMetadataValues();
-            metadata = $.extend(true, {}, modifiedValues);
-            // Save module state
-            Utils.command('save', component_id, null, {
-                metadata: metadata,
-                current_subs: _.pluck(
-                    Utils.getVideoList(videoUrl.getDisplayValue()),
-                    'video'
-                )
-            });
+
+            var isSubsModified = (function (values) {
+                var isSubsChanged = subs.hasChanged("value");
+
+                return Boolean(isSubsChanged && _.isString(values.sub));
+            }(modifiedValues));
+
+            // When we change value of `sub` field in the `Advanced`,
+            // we update data on backend. That provides possibility to remove
+            // transcripts.
+            if (isSubsModified) {
+                metadata = $.extend(true, {}, modifiedValues);
+                // Save module state
+                Utils.command('save', component_id, null, {
+                    metadata: metadata,
+                    current_subs: _.pluck(
+                        Utils.getVideoList(videoUrl.getDisplayValue()),
+                        'video'
+                    )
+                });
+            }
 
             // Get values from `Advanced` tab fields (`html5_sources`,
             // `youtube_id_1_0`) that should be synchronized.
@@ -122,7 +134,7 @@ function($, Backbone, _, Utils, MetadataView, MetadataCollection) {
             // Synchronize other fields that has the same `field_name` property.
             Utils.syncCollections(metadataCollection, this.collection);
 
-            if (subs.hasChanged()){
+            if (isSubsModified){
                 // When `sub` field is changed, clean Storage to avoid overwriting.
                 Utils.Storage.remove('sub');
 

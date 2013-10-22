@@ -218,7 +218,6 @@ function($, Backbone, _, Utils, FileUploader, gettext) {
 
                         self.render('found', resp);
                         Utils.Storage.set('sub', sub);
-                        self.currentItemSubs = sub;
                 })
                 .fail(function (resp) {
                     var message = resp.status || errorMessage;

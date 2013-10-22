@@ -565,7 +565,6 @@ Feature: Video Component Editor
         And I save changes
         Then when I view the video it does show the captions
 
-
     #31
     Scenario: Check saving module metadata on switching between tabs
         Given I have created a Video component with subtitles "t_not_exist"
