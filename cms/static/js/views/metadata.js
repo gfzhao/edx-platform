@@ -1,5 +1,5 @@
 
-define(["backbone", "underscore", "js/models/metadata"], function(Backbone, _, MetadataModel) {
+define(["require", "backbone", "underscore", "js/models/metadata"], function(require, Backbone, _, MetadataModel) {
     var Metadata = {};
 
     Metadata.Editor = Backbone.View.extend({
@@ -33,12 +33,9 @@ define(["backbone", "underscore", "js/models/metadata"], function(Backbone, _, M
                         new Metadata.List(data);
                     }
                     else if(model.getType() === MetadataModel.VIDEO_LIST_TYPE) {
-                        require(
-                            ["js/views/transcripts/metadata_videolist"],
-                            function (VideoList) {
-                                new VideoList(data);
-                            }
-                        );
+                        var VideoList = require("js/views/transcripts/metadata_videolist");
+
+                        new VideoList(data);
                     }
                     else {
                         // Everything else is treated as GENERIC_TYPE, which uses String editor.
